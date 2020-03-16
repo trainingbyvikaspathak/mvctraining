@@ -1,0 +1,379 @@
+-- MySQL Administrator dump 1.4
+--
+-- ------------------------------------------------------
+-- Server version	5.5.5-10.1.34-MariaDB
+
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8 */;
+
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+
+
+--
+-- Create schema training
+--
+
+CREATE DATABASE IF NOT EXISTS training;
+USE training;
+
+--
+-- Temporary table structure for view `v1`
+--
+DROP TABLE IF EXISTS `v1`;
+DROP VIEW IF EXISTS `v1`;
+
+--
+-- Definition of table `admin`
+--
+
+DROP TABLE IF EXISTS `admin`;
+CREATE TABLE `admin` (
+  `userid` varchar(100) NOT NULL,
+  `password` varchar(20) DEFAULT NULL,
+  `image` varchar(100) DEFAULT NULL,
+  `name` varchar(50) DEFAULT NULL,
+  PRIMARY KEY (`userid`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `admin`
+--
+
+/*!40000 ALTER TABLE `admin` DISABLE KEYS */;
+INSERT INTO `admin` (`userid`,`password`,`image`,`name`) VALUES 
+ ('admin','admin123@','media/admin/ravi.jpg','Ravi Kumar');
+/*!40000 ALTER TABLE `admin` ENABLE KEYS */;
+
+
+--
+-- Definition of table `city`
+--
+
+DROP TABLE IF EXISTS `city`;
+CREATE TABLE `city` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(20) DEFAULT NULL,
+  `state_id` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `state_id` (`state_id`),
+  CONSTRAINT `city_ibfk_1` FOREIGN KEY (`state_id`) REFERENCES `city` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `city`
+--
+
+/*!40000 ALTER TABLE `city` DISABLE KEYS */;
+INSERT INTO `city` (`id`,`name`,`state_id`) VALUES 
+ (1,'Bhopal',1),
+ (2,'Indore',1),
+ (3,'Jabalpur',1),
+ (4,'Gwalior',1),
+ (5,'Mirjapur',2),
+ (6,'Kanpur',2),
+ (7,'Lalitpur',2),
+ (8,'Raipur',3),
+ (9,'Bilaspur',3),
+ (10,'Mumbai',4),
+ (11,'Pune',4),
+ (12,'Dehradun',5);
+/*!40000 ALTER TABLE `city` ENABLE KEYS */;
+
+
+--
+-- Definition of table `emp`
+--
+
+DROP TABLE IF EXISTS `emp`;
+CREATE TABLE `emp` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(40) DEFAULT NULL,
+  `mobile` varchar(12) DEFAULT NULL,
+  `gender` varchar(10) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `emp`
+--
+
+/*!40000 ALTER TABLE `emp` DISABLE KEYS */;
+/*!40000 ALTER TABLE `emp` ENABLE KEYS */;
+
+
+--
+-- Definition of table `news`
+--
+
+DROP TABLE IF EXISTS `news`;
+CREATE TABLE `news` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `title` varchar(50) DEFAULT NULL,
+  `description` text,
+  `image` varchar(50) DEFAULT NULL,
+  `reporter_id` int(11) DEFAULT NULL,
+  `status` varchar(20) DEFAULT NULL,
+  `status_text` varchar(100) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `reporter_id` (`reporter_id`),
+  CONSTRAINT `news_ibfk_1` FOREIGN KEY (`reporter_id`) REFERENCES `reporter` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `news`
+--
+
+/*!40000 ALTER TABLE `news` DISABLE KEYS */;
+INSERT INTO `news` (`id`,`title`,`description`,`image`,`reporter_id`,`status`,`status_text`) VALUES 
+ (23,'new batch announced','             a new batch of java training will be going to start....                           \r\n                                    ','media/news/nikita.jpg',1,'Approved','approved'),
+ (24,'Mp govt going to change','A new change in mp govt will be seen very soon. A new change in mp govt will be seen very soon. A new change in mp govt will be seen very soon. A new change in mp govt will be seen very soon. A new change in mp govt will be seen very soon. A new change in mp govt will be seen very soon. A new change in mp govt will be seen very soon. A new change in mp govt will be seen very soon. A new change in mp govt will be seen very soon. A new change in mp govt will be seen very soon. A new change in mp govt will be seen very soon. A new change in mp govt will be seen very soon. A new change in mp govt will be seen very soon. A new change in mp govt will be seen very soon. A new change in mp govt will be seen very soon. ','media/news/PTI11-03-2020_000124B-770x433.webp',1,'Approved','approved');
+/*!40000 ALTER TABLE `news` ENABLE KEYS */;
+
+
+--
+-- Definition of table `news_category`
+--
+
+DROP TABLE IF EXISTS `news_category`;
+CREATE TABLE `news_category` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(100) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `news_category`
+--
+
+/*!40000 ALTER TABLE `news_category` DISABLE KEYS */;
+INSERT INTO `news_category` (`id`,`name`) VALUES 
+ (1,'entertainment news'),
+ (2,'bollywood news'),
+ (3,'polytics news'),
+ (4,'technical news'),
+ (5,'job news');
+/*!40000 ALTER TABLE `news_category` ENABLE KEYS */;
+
+
+--
+-- Definition of table `newstype`
+--
+
+DROP TABLE IF EXISTS `newstype`;
+CREATE TABLE `newstype` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `news_id` int(11) DEFAULT NULL,
+  `cat_id` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `news_id` (`news_id`),
+  KEY `cat_id` (`cat_id`),
+  CONSTRAINT `newstype_ibfk_1` FOREIGN KEY (`news_id`) REFERENCES `news` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `newstype_ibfk_2` FOREIGN KEY (`cat_id`) REFERENCES `news_category` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `newstype`
+--
+
+/*!40000 ALTER TABLE `newstype` DISABLE KEYS */;
+INSERT INTO `newstype` (`id`,`news_id`,`cat_id`) VALUES 
+ (1,23,4),
+ (2,23,5),
+ (3,24,1),
+ (4,24,3);
+/*!40000 ALTER TABLE `newstype` ENABLE KEYS */;
+
+
+--
+-- Definition of table `person`
+--
+
+DROP TABLE IF EXISTS `person`;
+CREATE TABLE `person` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) NOT NULL,
+  `fname` varchar(50) NOT NULL,
+  `age` tinyint(4) NOT NULL,
+  `gender` varchar(10) NOT NULL,
+  `hobbies` varchar(100) NOT NULL,
+  `userid` varchar(20) DEFAULT NULL,
+  `password` varchar(20) DEFAULT NULL,
+  `image` varchar(100) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `userid` (`userid`)
+) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `person`
+--
+
+/*!40000 ALTER TABLE `person` DISABLE KEYS */;
+INSERT INTO `person` (`id`,`name`,`fname`,`age`,`gender`,`hobbies`,`userid`,`password`,`image`) VALUES 
+ (2,'ravi kishan','kumar soni',12,'Male','Singing,Cooking,','ravi123','TVRJek5EVT0=','media/person/bhawna.jpg'),
+ (5,'suresh pal','mukesh pal',30,'Male','Singing,Cooking,Drawing,','suresh123@gmail.com','MTIzNDU=','media/person/login.png'),
+ (7,'amit sinha','amitesh sinha',12,'Male','Singing,','amit112233',NULL,'media/person/nikita.jpg'),
+ (8,'aryan','abhishek',10,'Male','Singing,Cooking,Drawing,','aryan@gmail.com','Aryan@11223344','media/person/rajkumar.jpg'),
+ (9,'mohan singh','mahadev singh',14,'Male','Dacning,Singing,Cooking,','mohansingh@gmail.com','Mohan@112233',NULL),
+ (11,'&lt;b&gt;Raghav&lt;/b&gt;','&lt;script&gt;alert(\'janakraj\');&lt;/script&gt;',18,'Male','Dacning,Cooking,','Raghuweer@gmil.com','Raghuveer@123',NULL),
+ (12,'jamunia','&lt;script&gt;alert(\'ram mani\');&lt;/script&gt;',19,'Female','Dacning,','jamuu111','SmFtbXVAMTEyMjMz',NULL),
+ (13,'kamlesh','kamal prasad',17,'Male','Dacning,Cooking,Drawing,','kamlesh1122','S2FtbGVzaDExMjIzMw==',NULL),
+ (14,'mamta','umesh',19,'Female','Dacning,Singing,Drawing,','mamta123','TWFtdGFAMTIz',NULL),
+ (15,'kamlesh','Ramakant',15,'Male','Dacning,Singing,Cooking,','kamlesh123','S2FtbGVzaEAxMjM=',NULL),
+ (16,'Koyan khanna','Ramesh Khanna',19,'Female','Dacning,Singing,Cooking,','koyal@gmailcom','UmVlbmFAMTIz','media/person/2.jpg'),
+ (19,'namita','baba',18,'Male','Dacning','namita@hello.com','Namita@123','C:\\Users\\Dell\\Desktop\\GuptaSir_July19\\5565\\ankit.jpg'),
+ (20,'vikas pathak','ramesh',20,'Male','Dacning,Singing,','vikas@gmail.com','VmlrYXNAMTIz','media/person/devendra2.jpg'),
+ (21,'rohan rai','mohan rai',20,'Male','Dacning,Cooking,','mohanrai@gmail.com','TW9oYW5AMTIzNDU=','media/person/omprakash.jpg');
+/*!40000 ALTER TABLE `person` ENABLE KEYS */;
+
+
+--
+-- Definition of table `query`
+--
+
+DROP TABLE IF EXISTS `query`;
+CREATE TABLE `query` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) DEFAULT NULL,
+  `email` varchar(100) DEFAULT NULL,
+  `contact` varchar(20) DEFAULT NULL,
+  `message` text,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `query`
+--
+
+/*!40000 ALTER TABLE `query` DISABLE KEYS */;
+INSERT INTO `query` (`id`,`name`,`email`,`contact`,`message`) VALUES 
+ (1,'vikas pathak','viaks.gist@gmail.com','8877665544','Give me some job news');
+/*!40000 ALTER TABLE `query` ENABLE KEYS */;
+
+
+--
+-- Definition of table `reporter`
+--
+
+DROP TABLE IF EXISTS `reporter`;
+CREATE TABLE `reporter` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(100) DEFAULT NULL,
+  `dob` date DEFAULT NULL,
+  `gender` varchar(10) DEFAULT NULL,
+  `userid` varchar(100) DEFAULT NULL,
+  `password` varchar(50) DEFAULT NULL,
+  `contact` varchar(20) DEFAULT NULL,
+  `email` varchar(100) DEFAULT NULL,
+  `image` varchar(100) DEFAULT NULL,
+  `status` varchar(20) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `userid` (`userid`),
+  UNIQUE KEY `contact` (`contact`),
+  UNIQUE KEY `email` (`email`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `reporter`
+--
+
+/*!40000 ALTER TABLE `reporter` DISABLE KEYS */;
+INSERT INTO `reporter` (`id`,`name`,`dob`,`gender`,`userid`,`password`,`contact`,`email`,`image`,`status`) VALUES 
+ (1,'vikas pathak','1990-11-10','Male','vikas@gmail.com','12345','8787788787','vikas.gist8056@gmail.com','media/reporter/balram.jpg','approved'),
+ (4,'vikas pathak','1990-11-10','Male','vikaspathak1234','12345','8787788889','vikas2.gist8056@gmail.com','media/reporter/devendra2.jpg','approved');
+/*!40000 ALTER TABLE `reporter` ENABLE KEYS */;
+
+
+--
+-- Definition of table `sample`
+--
+
+DROP TABLE IF EXISTS `sample`;
+CREATE TABLE `sample` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `sid` int(11) DEFAULT NULL,
+  `cid` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `sid` (`sid`),
+  CONSTRAINT `sample_ibfk_1` FOREIGN KEY (`sid`) REFERENCES `states` (`id`),
+  CONSTRAINT `sample_ibfk_2` FOREIGN KEY (`sid`) REFERENCES `city` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `sample`
+--
+
+/*!40000 ALTER TABLE `sample` DISABLE KEYS */;
+/*!40000 ALTER TABLE `sample` ENABLE KEYS */;
+
+
+--
+-- Definition of table `states`
+--
+
+DROP TABLE IF EXISTS `states`;
+CREATE TABLE `states` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(20) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `states`
+--
+
+/*!40000 ALTER TABLE `states` DISABLE KEYS */;
+INSERT INTO `states` (`id`,`name`) VALUES 
+ (1,'MP'),
+ (2,'UP'),
+ (3,'CG'),
+ (4,'MH'),
+ (5,'UK');
+/*!40000 ALTER TABLE `states` ENABLE KEYS */;
+
+
+--
+-- Definition of table `subscribers`
+--
+
+DROP TABLE IF EXISTS `subscribers`;
+CREATE TABLE `subscribers` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(30) DEFAULT NULL,
+  `email` varchar(100) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `email` (`email`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `subscribers`
+--
+
+/*!40000 ALTER TABLE `subscribers` DISABLE KEYS */;
+INSERT INTO `subscribers` (`id`,`name`,`email`) VALUES 
+ (1,'vikas','vikas.gist8056@gmail.com'),
+ (2,'vikas pathak','personal.vikaspathak@gmail.com');
+/*!40000 ALTER TABLE `subscribers` ENABLE KEYS */;
+
+
+--
+-- Definition of view `v1`
+--
+
+DROP TABLE IF EXISTS `v1`;
+DROP VIEW IF EXISTS `v1`;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v1` AS select `news`.`title` AS `title` from `news` where `news`.`id` in (select `newstype`.`news_id` from `newstype` where `newstype`.`cat_id` in (select `news_category`.`id` from `news_category` where (`news_category`.`name` = 'entertainment news')));
+
+
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
